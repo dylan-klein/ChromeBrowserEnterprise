@@ -117,13 +117,14 @@ export function getModelById(id: string): ModelOption | undefined {
 const DEFAULT_MODEL_IDS = {
   claude: "claude-sonnet-4-6",
   gemini: "gemini-3-flash-preview",
+  openai: "gpt-5.4",
 } as const;
 
 /**
  * Returns the server-side default {@link ModelOption} for the given
  * `LLM_PROVIDER` env value. Used when the client omits `modelId`.
  */
-export function getDefaultModelFor(provider: "claude" | "gemini"): ModelOption {
+export function getDefaultModelFor(provider: "claude" | "gemini" | "openai"): ModelOption {
   const id = DEFAULT_MODEL_IDS[provider];
   const match = getModelById(id);
   if (!match) {
@@ -139,7 +140,7 @@ export function getDefaultModelFor(provider: "claude" | "gemini"): ModelOption {
  * form for callers that only need the ID (e.g. the root layout's
  * `llmModel` default).
  */
-export function getDefaultModelId(provider: "claude" | "gemini"): string {
+export function getDefaultModelId(provider: "claude" | "gemini" | "openai"): string {
   return DEFAULT_MODEL_IDS[provider];
 }
 

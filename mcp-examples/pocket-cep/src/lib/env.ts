@@ -81,7 +81,14 @@ const geminiProvider = z.object({
   OPENAI_API_KEY: z.string().default(""),
 });
 
-const llmSchema = z.discriminatedUnion("LLM_PROVIDER", [claudeProvider, geminiProvider]);
+const openaiProvider = z.object({
+  LLM_PROVIDER: z.literal("openai"),
+  ANTHROPIC_API_KEY: z.string().default(""),
+  GOOGLE_AI_API_KEY: z.string().default(""),
+  OPENAI_API_KEY: z.string().default(""),
+});
+
+const llmSchema = z.discriminatedUnion("LLM_PROVIDER", [claudeProvider, geminiProvider, openaiProvider]);
 
 /**
  * Zod's discriminatedUnion requires the discriminant field to exist in the
@@ -103,12 +110,14 @@ function isRecord(v: unknown): v is Record<string, unknown> {
  * `GOOGLE_AI_API_KEY` would still default to Claude and hit a
  * "missing key" error on first chat.
  */
-function inferLlmProvider(raw: Record<string, unknown>): "claude" | "gemini" {
+function inferLlmProvider(raw: Record<string, unknown>): "claude" | "gemini" | "openai" {
   const explicit = typeof raw.LLM_PROVIDER === "string" ? raw.LLM_PROVIDER : "";
-  if (explicit) return explicit as "claude" | "gemini";
+  if (explicit) return explicit as "claude" | "gemini" | "openai";
   const hasGemini = typeof raw.GOOGLE_AI_API_KEY === "string" && raw.GOOGLE_AI_API_KEY.trim() !== "";
   const hasClaude = typeof raw.ANTHROPIC_API_KEY === "string" && raw.ANTHROPIC_API_KEY.trim() !== "";
-  if (hasGemini && !hasClaude) return "gemini";
+  const hasOpenAI = typeof raw.OPENAI_API_KEY === "string" && raw.OPENAI_API_KEY.trim() !== "";
+  if (hasGemini && !hasClaude && !hasOpenAI) return "gemini";
+  if (hasOpenAI && !hasClaude && !hasGemini) return "openai";
   return "claude";
 }
 
