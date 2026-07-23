@@ -28,6 +28,7 @@ import { MCP_NPX_COMMAND } from "../src/lib/constants";
 loadEnvConfig(process.cwd());
 
 console.log("\x1b[36m%s\x1b[0m", "┌  Pocket CEP — Developer Server Bootstrap");
+console.log("\x1b[36m%s\x1b[0m", `│  WEB_URL       http://localhost:3000`);
 console.log("\x1b[36m%s\x1b[0m", `│  AUTH_MODE     ${process.env.AUTH_MODE}`);
 console.log("\x1b[36m%s\x1b[0m", `│  LLM_PROVIDER  ${process.env.LLM_PROVIDER || "default"}`);
 console.log("\x1b[36m%s\x1b[0m", `│  MCP_SERVER    ${process.env.MCP_SERVER_URL || "http://localhost:4000/mcp"}`);
